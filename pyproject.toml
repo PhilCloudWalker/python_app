@@ -5,7 +5,8 @@ description = ""
 authors = [
     {name = "Philipp.DAngelo.external", email = "philipp_angelo@gmx.de"},
 ]
-dependencies = []
+dependencies = [
+]
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
@@ -13,5 +14,5 @@ license = {text = "MIT"}
 [tool.pdm.dev-dependencies]
 dev = [
     "pytest>=7.4.3",
-    "black>=23.11.0",
+    "black>=23.12.1",
 ]
