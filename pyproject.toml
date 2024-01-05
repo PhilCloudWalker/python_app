@@ -6,6 +6,7 @@ authors = [
     {name = "Philipp.DAngelo.external", email = "philipp_angelo@gmx.de"},
 ]
 dependencies = [
+    "sqlalchemy==1.4",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
