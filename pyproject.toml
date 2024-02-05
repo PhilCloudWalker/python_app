@@ -17,3 +17,5 @@ dev = [
     "pytest>=7.4.3",
     "black>=23.12.1",
 ]
+[tool.pdm.scripts]
+test = "pytest tests/shop/"
