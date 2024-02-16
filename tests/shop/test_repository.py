@@ -13,6 +13,7 @@ def insert_order_line(session):
     )
     return orderline_id
 
+
 def insert_batch(session, batch_id):
     session.execute(
         "INSERT into batches (reference, sku, _purchased_quantity)"
@@ -20,10 +21,12 @@ def insert_batch(session, batch_id):
     )
     return batch_id
 
+
 def insert_allocation(session, orderline_id, batch_id):
     session.execute(
         f'Update order_lines SET batch_id = "{batch_id}" where order_lines.id = "{orderline_id}"'
     )
+
 
 def test_repository_can_save_a_batch(session):
     batch = model.Batch("batch1", "RUSTY-SOAPDISH", 100, eta=None)
@@ -36,6 +39,7 @@ def test_repository_can_save_a_batch(session):
         'SELECT reference, sku, _purchased_quantity, eta FROM "batches"'
     )
     assert list(rows) == [("batch1", "RUSTY-SOAPDISH", 100, None)]
+
 
 def test_repository_can_retrieve_a_batch_with_allocations(session):
     orderline_id = insert_order_line(session)
@@ -50,6 +54,17 @@ def test_repository_can_retrieve_a_batch_with_allocations(session):
     assert retrieved == expected  # Batch.__eq__ only compares reference  #(3)
     assert retrieved.sku == expected.sku
     assert retrieved._purchased_quantity == expected._purchased_quantity
-    assert retrieved._allocations == { 
+    assert retrieved._allocations == {
         model.OrderLine("order1", "GENERIC-SOFA", 12),
     }
+
+def test_repository_can_list_multiple_batches(session):
+    insert_batch(session, "batch1")
+    insert_batch(session, "batch2")
+
+    repo = repository.SqlAlchemyRepository(session)
+    retrieved = repo.list()
+
+    expected = [model.Batch("batch1", "GENERIC-SOFA", 100, eta=None), model.Batch("batch2", "GENERIC-SOFA", 100, eta=None)]
+    assert retrieved == expected  # Batch.__eq__ only compares reference  #(3)
+
