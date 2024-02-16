@@ -7,6 +7,10 @@ authors = [
 ]
 dependencies = [
     "sqlalchemy==1.4",
+    "flask>=3.0.2",
+    "SQLAlchemy-Utils>=0.41.1",
+    "random-word>=1.0.11",
+    "environ-config>=23.2.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -19,3 +23,5 @@ dev = [
 ]
 [tool.pdm.scripts]
 test = "pytest tests/shop/"
+app = "flask --app shop.api --debug run"
+start.env_file = ".env"
