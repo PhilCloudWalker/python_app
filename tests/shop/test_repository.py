@@ -58,6 +58,7 @@ def test_repository_can_retrieve_a_batch_with_allocations(session):
         model.OrderLine("order1", "GENERIC-SOFA", 12),
     }
 
+
 def test_repository_can_list_multiple_batches(session):
     insert_batch(session, "batch1")
     insert_batch(session, "batch2")
@@ -65,6 +66,8 @@ def test_repository_can_list_multiple_batches(session):
     repo = repository.SqlAlchemyRepository(session)
     retrieved = repo.list()
 
-    expected = [model.Batch("batch1", "GENERIC-SOFA", 100, eta=None), model.Batch("batch2", "GENERIC-SOFA", 100, eta=None)]
+    expected = [
+        model.Batch("batch1", "GENERIC-SOFA", 100, eta=None),
+        model.Batch("batch2", "GENERIC-SOFA", 100, eta=None),
+    ]
     assert retrieved == expected  # Batch.__eq__ only compares reference  #(3)
-

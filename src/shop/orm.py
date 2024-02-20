@@ -9,7 +9,7 @@ from sqlalchemy import (
     Date,
     create_engine,
 )
-from sqlalchemy.orm import mapper, registry, relationship
+from sqlalchemy.orm import mapper, registry, relationship, Session
 from shop.model import OrderLine, Batch
 from sqlalchemy_utils import database_exists, create_database
 import sys
@@ -61,3 +61,8 @@ def validate_database():
         )  # Verifies if database is there or not.
     else:
         print("Database Already Exists")
+
+
+def get_session():
+    engine = create_engine(DB_URL, echo=True)
+    return Session(bind=engine)

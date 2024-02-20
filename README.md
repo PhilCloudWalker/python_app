@@ -1,12 +1,23 @@
 # Continue working:
-chapter 2 - continue with repo. why do we need it only for batch?
+
+chapter 4 - tasks
+- create initial flask app
+- implement e2e test
+  - include session to flask
+- implement service layer test
+
+## Test Setup
+- using testing client for the app
+- database: 
+  - using in memory db
+  - using in rollback for transaction
 
 
 # example-package
 
 # source
 - book: https://www.cosmicpython.com/book/preface.html
-- code examples: hhttps://github.com/cosmicpython/code
+- code examples: https://github.com/cosmicpython/code
 
 # Erkenntnisse
 
@@ -35,3 +46,7 @@ chapter 2 - continue with repo. why do we need it only for batch?
 - engine: home base - both a Dialect and a Pool, which together interpret the DBAPI’s module functions as well as the behavior of the database.
 - Dialect: behavior of a specific database and DB-API combination
 - Pool: connection pool
+
+# Tips
+- Define focus time
+- Stop in the middle
