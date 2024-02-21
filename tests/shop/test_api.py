@@ -23,22 +23,7 @@ def random_orderid():
     return "".join(random.sample(string.ascii_lowercase, 4))
 
 
-def add_stock(batches):
-    engine = create_engine(DB_URL, echo=True)
-    session = Session(bind=engine)
-    for batch_ref, sku, qty, eta in batches:
-        eta = f'"{eta}"' if eta else "NULL"
-        session.execute(
-            "INSERT INTO batches (reference, sku,_purchased_quantity, eta) VALUES "
-            f'("{batch_ref}", "{sku}", {qty}, {eta})'
-        )
-    session.commit()
-    session.close()
-
-
-# @pytest.mark.usefixtures("restart_api")
-# def test_api_returns_allocation(add_stock):
-def test_api_returns_allocation():
+def test_api_returns_allocation(add_stock):
     sku, othersku = random_sku(), random_sku()
     earlybatch = random_batchref()
     laterbatch = random_batchref()
@@ -59,8 +44,7 @@ def test_api_returns_allocation():
     assert r.json()["batchref"] == earlybatch
 
 
-# @pytest.mark.usefixtures("restart_api")
-def test_400_message_for_out_of_stock():
+def test_400_message_for_out_of_stock(add_stock):
     sku, small_batch, large_order = random_sku(), random_batchref(), random_orderid()
     add_stock(
         [

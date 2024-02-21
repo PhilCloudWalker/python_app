@@ -1,16 +1,12 @@
 # Continue working:
 
 chapter 4 - tasks
-- create initial flask app
-- implement e2e test
-  - include session to flask
 - implement service layer test
 
 ## Test Setup
 - using testing client for the app
 - database: 
-  - using in memory db
-  - using in rollback for transaction
+  - using in rollback for sqlite db
 
 
 # example-package

@@ -1,8 +1,7 @@
 import pytest
-import shop.model
-import shop.repository
-
-# import services
+import shop.model as model
+from shop.repository import FakeRepository, FakeSession
+import shop.services as services
 
 
 def test_returns_allocation():

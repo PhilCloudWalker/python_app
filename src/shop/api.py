@@ -23,9 +23,7 @@ def allocate():
     if int(request.headers.get("Content-Length")) > MAX_CONTENT_LENGTH:
         raise make_response({"message": f"Request object has to be below 1MB"}, 400)
 
-    data = (
-        request.get_json()
-    )
+    data = request.get_json()
     order_line = model.OrderLine(data["orderid"], data["sku"], data["qty"])
 
     if not any([order_line.sku == b.sku for b in batches]):
