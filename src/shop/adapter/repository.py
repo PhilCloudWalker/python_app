@@ -1,4 +1,4 @@
-from shop.model import Batch
+from shop.domain.model import Batch
 
 
 class SqlAlchemyRepository:

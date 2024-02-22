@@ -1,6 +1,6 @@
 import pytest
-import shop.model as model
-import shop.services as services
+import shop.domain.model as model
+import shop.service_layer.services as services
 
 
 class FakeRepository:

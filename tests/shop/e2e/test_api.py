@@ -5,8 +5,8 @@ import string
 import requests
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-from shop.orm import DB_URL
-from config import AppConfig
+from shop.adapter.orm import DB_URL
+from shop.config import AppConfig
 
 Config = AppConfig.from_environ()
 

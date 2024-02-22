@@ -1,10 +1,10 @@
 from flask import Flask, make_response, request
-from shop.orm import validate_database, DB_URL, start_mappers
-from shop.repository import SqlAlchemyRepository
-import shop.model as model
+from shop.adapter.orm import validate_database, DB_URL, start_mappers
+from shop.adapter.repository import SqlAlchemyRepository
+import shop.domain.model as model
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-import shop.services as services
+import shop.service_layer.services as services
 
 app = Flask(__name__)
 get_session = sessionmaker(bind=create_engine(DB_URL, echo=True))

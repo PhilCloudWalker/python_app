@@ -10,7 +10,7 @@ from sqlalchemy import (
     create_engine,
 )
 from sqlalchemy.orm import mapper, registry, relationship, Session
-from shop.model import OrderLine, Batch
+from shop.domain.model import OrderLine, Batch
 from sqlalchemy_utils import database_exists, create_database
 import sys
 
