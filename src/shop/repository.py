@@ -13,21 +13,3 @@ class SqlAlchemyRepository:
 
     def list(self):
         return self.session.query(Batch).all()
-
-class FakeRepository:
-    
-    def __init__(self, batches) -> None:
-        self.batches = batches
-    
-    def list(self):
-        return self.batches
-    
-    def add(self, batch):
-        self.batches.append(batch)
-
-    
-class FakeSession():
-    committed = False
-
-    def commit(self):
-        self.committed = True

@@ -1,7 +1,7 @@
 # Continue working:
 
 chapter 4 - tasks
-- implement service layer test
+- use service in api defintion
 
 ## Test Setup
 - using testing client for the app
