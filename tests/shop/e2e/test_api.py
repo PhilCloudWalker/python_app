@@ -1,12 +1,11 @@
-import pytest
 import random_word
 import random
 import string
 import requests
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
-from shop.adapter.orm import DB_URL
 from shop.config import AppConfig
+from unittest.mock import patch
+from shop.entrypoints.flask_app import MAX_CONTENT_LENGTH
+import shop.entrypoints.flask_app as flask_app
 
 Config = AppConfig.from_environ()
 
@@ -65,3 +64,13 @@ def test_400_message_for_invalid_sku():
     r = requests.post(f"{url}/allocate", json=data)
     assert r.status_code == 400
     assert r.json()["message"] == f"Invalid sku {unknown_sku}"
+
+#@patch(flask., 20)
+def test_400_content_too_long(monkeypatch):
+    #monkeypatch.setattr(flask_app , "MAX_CONTENT_LENGTH", 20)
+    very_long_order_id = "long"*1000
+    data = {"orderid": very_long_order_id, "sku": "LONG", "qty": 20}
+    url = Config.url
+    r = requests.post(f"{url}/allocate", json=data)
+    assert r.status_code == 400
+    assert r.json()["message"] == f"Request object has to be below 1MB"

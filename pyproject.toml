@@ -1,7 +1,7 @@
 [project]
 name = "shop"
 version = "0.1.0"
-description = "Python Archtecture"
+description = ""
 authors = [
     {name = "Philipp.DAngelo.external", email = "philipp_angelo@gmx.de"},
 ]
@@ -21,7 +21,12 @@ dev = [
     "pytest>=7.4.3",
     "black>=23.12.1",
 ]
+
 [tool.pdm.scripts]
+start.env_file.override = ".env"
 test = "pytest tests/shop/"
 app = "flask --app shop.entrypoints.flask_app --debug run"
-start.env_file = ".env"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"

@@ -5,13 +5,14 @@ import shop.domain.model as model
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import shop.service_layer.services as services
+from shop.config import AppConfig
 
 app = Flask(__name__)
 get_session = sessionmaker(bind=create_engine(DB_URL, echo=True))
 validate_database()
 start_mappers()  # TODO: best place to put?
-
-MAX_CONTENT_LENGTH = 1 * 1024 * 1024  # 1MB in bytes
+Config = AppConfig.from_environ()
+MAX_CONTENT_LENGTH = 1024^2
 
 
 @app.post("/allocate")
@@ -20,13 +21,12 @@ def allocate():
     repo = SqlAlchemyRepository(session)
 
     if int(request.headers.get("Content-Length")) > MAX_CONTENT_LENGTH:
-        raise make_response({"message": f"Request object has to be below 1MB"}, 400)
+        return make_response({"message": "Request object has to be below 1MB"}, 400)
 
     data = request.get_json()
-    order_line = model.OrderLine(data["orderid"], data["sku"], data["qty"])
 
     try:
-        batch_ref = services.allocate(order_line, repo, session)
+        batch_ref = services.allocate(data["orderid"], data["sku"], data["qty"], repo, session)
     except (model.OutOfStock, services.InvalidSku) as exc:
         return make_response({"message": str(exc)}, 400)
     return make_response({"batchref": batch_ref}, 201)
