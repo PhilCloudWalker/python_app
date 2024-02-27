@@ -1,8 +1,8 @@
 import pytest
-from sqlalchemy.orm import Session, clear_mappers, sessionmaker
 from sqlalchemy import create_engine
-from shop.adapter.orm import metadata, start_mappers
-from shop.adapter.orm import DB_URL
+from sqlalchemy.orm import Session, clear_mappers, sessionmaker
+
+from shop.adapter.orm import DB_URL, metadata, start_mappers
 
 
 @pytest.fixture(scope="module")

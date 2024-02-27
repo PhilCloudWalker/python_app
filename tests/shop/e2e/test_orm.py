@@ -1,5 +1,6 @@
-import shop.domain.model as model
 from datetime import date
+
+import shop.domain.model as model
 
 
 def test_orderline_mapper_can_save_lines(session):

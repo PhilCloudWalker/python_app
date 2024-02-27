@@ -14,7 +14,7 @@
             },
             "args": [
                 "--app",
-                "shop.api",
+                "shop.entrypoints.flask_app",
                 "run",
                 "--no-debugger",
                 "--no-reload"

@@ -11,6 +11,8 @@ dependencies = [
     "SQLAlchemy-Utils>=0.41.1",
     "random-word>=1.0.11",
     "environ-config>=23.2.0",
+    "isort>=5.13.2",
+    "flake8>=7.0.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"

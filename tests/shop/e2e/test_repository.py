@@ -1,5 +1,5 @@
-import shop.domain.model as model
 import shop.adapter.repository as repository
+import shop.domain.model as model
 
 
 def insert_order_line(session):

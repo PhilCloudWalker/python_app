@@ -1,12 +1,14 @@
-import pytest
-import random_word
 import random
 import string
+
+import pytest
+import random_word
 import requests
-from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-from shop.adapter.orm import DB_URL
+from sqlalchemy.orm import Session
+
 from config import AppConfig
+from shop.adapter.orm import DB_URL
 
 Config = AppConfig.from_environ()
 
@@ -66,8 +68,9 @@ def test_400_message_for_invalid_sku():
     assert r.status_code == 400
     assert r.json()["message"] == f"Invalid sku {unknown_sku}"
 
+
 def test_400_content_too_long():
-    very_long_order_id = "long"*1000
+    very_long_order_id = "long" * 400000
     data = {"orderid": very_long_order_id, "sku": "LONG", "qty": 20}
     url = Config.url
     r = requests.post(f"{url}/allocate", json=data)

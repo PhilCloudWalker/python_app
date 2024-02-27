@@ -1,18 +1,17 @@
 from sqlalchemy import (
-    Table,
-    MetaData,
     Column,
-    Integer,
-    String,
-    ForeignKey,
-    DateTime,
     Date,
+    ForeignKey,
+    Integer,
+    MetaData,
+    String,
+    Table,
     create_engine,
 )
-from sqlalchemy.orm import mapper, registry, relationship, Session
-from shop.domain.model import OrderLine, Batch
-from sqlalchemy_utils import database_exists, create_database
-import sys
+from sqlalchemy.orm import Session, registry, relationship
+from sqlalchemy_utils import create_database, database_exists
+
+from shop.domain.model import Batch, OrderLine
 
 metadata = MetaData()
 mapper_registry = registry(metadata=metadata)
@@ -39,7 +38,7 @@ batch = Table(
 
 
 def start_mappers():
-    line_mapper = mapper_registry.map_imperatively(OrderLine, order_line)
+    mapper_registry.map_imperatively(OrderLine, order_line)
     mapper_registry.map_imperatively(
         Batch,
         batch,

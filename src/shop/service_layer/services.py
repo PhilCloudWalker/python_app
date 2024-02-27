@@ -7,7 +7,7 @@ class InvalidSku(Exception):
 
 def allocate(orderid, sku, qty, repo, session):
     batches = repo.list()
-    order_line = model.OrderLine(orderid, sku,qty)
+    order_line = model.OrderLine(orderid, sku, qty)
 
     if order_line.sku not in {b.sku for b in batches}:
         raise InvalidSku(f"Invalid sku {order_line.sku}")
@@ -24,7 +24,7 @@ def add_batch(reference, sku, qty, eta, repo, session):
 
 
 def deallocate(orderid, sku, qty, batch, repo, session):
-    order_line = model.OrderLine(orderid, sku,qty)
+    order_line = model.OrderLine(orderid, sku, qty)
     batch.deallocate(order_line)
     repo.add(batch)
     session.commit()
