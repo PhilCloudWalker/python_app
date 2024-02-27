@@ -5,13 +5,11 @@ import shop.domain.model as model
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import shop.service_layer.services as services
-from shop.config import AppConfig
 
 app = Flask(__name__)
 get_session = sessionmaker(bind=create_engine(DB_URL, echo=True))
 validate_database()
 start_mappers()  # TODO: best place to put?
-Config = AppConfig.from_environ()
 MAX_CONTENT_LENGTH = 1024^2
 
 
