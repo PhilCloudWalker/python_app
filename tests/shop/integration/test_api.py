@@ -65,3 +65,11 @@ def test_400_message_for_invalid_sku():
     r = requests.post(f"{url}/allocate", json=data)
     assert r.status_code == 400
     assert r.json()["message"] == f"Invalid sku {unknown_sku}"
+
+def test_400_content_too_long():
+    very_long_order_id = "long"*1000
+    data = {"orderid": very_long_order_id, "sku": "LONG", "qty": 20}
+    url = Config.url
+    r = requests.post(f"{url}/allocate", json=data)
+    assert r.status_code == 400
+    assert r.json()["message"] == f"Request object has to be below 1MB"
