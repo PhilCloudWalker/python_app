@@ -23,5 +23,5 @@ dev = [
 ]
 [tool.pdm.scripts]
 test = "pytest tests/shop/"
-app = "flask --app shop.api --debug run"
+app = "flask --app shop.entrypoints.flask_app --debug run"
 start.env_file = ".env"

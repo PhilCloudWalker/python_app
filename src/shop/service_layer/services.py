@@ -1,4 +1,4 @@
-import shop.model as model
+import shop.domain.model as model
 
 
 class InvalidSku(Exception):
