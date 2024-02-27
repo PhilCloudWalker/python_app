@@ -1,11 +1,16 @@
 import pytest
 import shop.domain.model as model
 import shop.service_layer.services as services
+import datetime as dt
 
 
 class FakeRepository:
     def __init__(self, batches) -> None:
         self._batches = set(batches)
+
+    @classmethod
+    def for_batch(cls, ref, sku, qty, eta):
+        return FakeRepository([model.Batch(ref, sku, qty, eta)])
 
     def list(self):
         return self._batches
@@ -29,47 +34,71 @@ class FakeSession:
 
 
 def test_returns_allocation():
-    line = model.OrderLine("o1", "COMPLICATED-LAMP", 10)
-    batch = model.Batch("b1", "COMPLICATED-LAMP", 100, eta=None)
-    repo = FakeRepository([batch])
+    repo = FakeRepository.for_batch("batch1", "COMPLICATED-LAMP", 100, eta=None)
+    result = services.allocate("o1", "COMPLICATED-LAMP", 10, repo, FakeSession())
+    assert result == "batch1"
 
-    result = services.allocate(line, repo, FakeSession())
-    assert result == "b1"
+def test_add_batch():
+    repo, session = FakeRepository([]), FakeSession()
+    services.add_batch("b1", "CRUNCHY-ARMCHAIR", 100, None, repo, session)
+    assert repo.get("b1") is not None
+    assert session.committed
+
+def test_allocate_returns_allocation():
+    repo, session = FakeRepository([]), FakeSession()
+    services.add_batch("batch1", "COMPLICATED-LAMP", 100, None, repo, session)
+    result = services.allocate("o1", "COMPLICATED-LAMP", 10, repo, session)
+    assert result == "batch1"
 
 
-def test_error_for_invalid_sku():
-    line = model.OrderLine("o1", "NONEXISTENTSKU", 10)
-    batch = model.Batch("b1", "AREALSKU", 100, eta=None)
-    repo = FakeRepository([batch])
+def test_allocate_errors_for_invalid_sku():
+    repo, session = FakeRepository([]), FakeSession()
+    services.add_batch("b1", "AREALSKU", 100, None, repo, session)
 
     with pytest.raises(services.InvalidSku, match="Invalid sku NONEXISTENTSKU"):
-        services.allocate(line, repo, FakeSession())
+        services.allocate("o1", "NONEXISTENTSKU", 10, repo, FakeSession())
+
+def test_error_for_invalid_sku():
+    repo = FakeRepository.for_batch("b1", "AREALSKU", 100, eta=None)
+
+    with pytest.raises(services.InvalidSku, match="Invalid sku NONEXISTENTSKU"):
+        services.allocate("o1", "NONEXISTENTSKU", 10, repo, FakeSession())
 
 
 def test_commits():
-    line = model.OrderLine("o1", "OMINOUS-MIRROR", 10)
-    batch = model.Batch("b1", "OMINOUS-MIRROR", 100, eta=None)
-    repo = FakeRepository([batch])
+    repo = FakeRepository.for_batch("b1", "OMINOUS-MIRROR", 100, eta=None)
     session = FakeSession()
 
-    services.allocate(line, repo, session)
+    services.allocate("o1", "OMINOUS-MIRROR", 10, repo, session)
     assert session.committed is True
-
 
 def test_deallocate_decrements_available_quantity():
     repo, session = FakeRepository([]), FakeSession()
     services.add_batch("b1", "BLUE-PLINTH", 100, None, repo, session)
-    line = model.OrderLine("o1", "BLUE-PLINTH", 10)
-    services.allocate(line, repo, session)
+    services.allocate("o1", "BLUE-PLINTH", 10, repo, session)
     batch = repo.get(batch_id="b1")
     assert batch.available_quantity == 90
-    services.deallocate(line, batch, repo, session)
+    services.deallocate("o1", "BLUE-PLINTH", 10, batch, repo, session)
     assert batch.available_quantity == 100
+
 
 def test_trying_to_deallocate_unallocated_batch():
     repo, session = FakeRepository([]), FakeSession()
     services.add_batch("b1", "BLUE-PLINTH", 100, None, repo, session)
     batch = repo.get(batch_id="b1")
-    line = model.OrderLine("o1", "RRED-PLINTH", 10)
-    services.deallocate(line, batch, repo, session)
+    services.deallocate("o1", "RRED-PLINTH", 10, batch, repo, session)
     assert batch.available_quantity == 100
+
+
+def test_prefers_warehouse_batches_to_shipments():
+    tomorrow = dt.datetime.today() + dt.timedelta(days=1)
+    repo = FakeRepository.for_batch("in-stock-batch", "RETRO-CLOCK", 100, eta=None)
+    session = FakeSession()
+    services.add_batch("shipment-batch", "RETRO-CLOCK", 100, tomorrow, repo, session)
+
+    services.allocate("o1", "RETRO-CLOCK", 10, repo, session)
+
+    in_stock_batch = repo.get("in-stock-batch")
+    shipment_batch = repo.get("shipment-batch")
+    assert in_stock_batch.available_quantity == 90
+    assert shipment_batch.available_quantity == 100
