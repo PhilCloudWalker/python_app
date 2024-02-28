@@ -10,7 +10,7 @@ from shop.adapter.repository import SqlAlchemyRepository
 app = Flask(__name__)
 get_session = sessionmaker(bind=create_engine(DB_URL, echo=True))
 validate_database()
-start_mappers()  # TODO: best place to put?
+start_mappers()  # TODO: potential test issue - if test import flask_app start mappers would be called a 2nd time after conftest which results in an error
 MAX_CONTENT_LENGTH = 1024**2
 
 
