@@ -1,11 +1,13 @@
-import random_word
 import random
 import string
-import requests
-from shop.config import AppConfig
 from unittest.mock import patch
-from shop.entrypoints.flask_app import MAX_CONTENT_LENGTH
+
+import random_word
+import requests
+
 import shop.entrypoints.flask_app as flask_app
+from shop.config import AppConfig
+from shop.entrypoints.flask_app import MAX_CONTENT_LENGTH
 
 Config = AppConfig.from_environ()
 
@@ -65,10 +67,11 @@ def test_400_message_for_invalid_sku():
     assert r.status_code == 400
     assert r.json()["message"] == f"Invalid sku {unknown_sku}"
 
-#@patch(flask., 20)
+
+# @patch(flask., 20)
 def test_400_content_too_long(monkeypatch):
-    #monkeypatch.setattr(flask_app , "MAX_CONTENT_LENGTH", 20)
-    very_long_order_id = "long"*1000
+    # monkeypatch.setattr(flask_app , "MAX_CONTENT_LENGTH", 20)
+    very_long_order_id = "long" * 1000
     data = {"orderid": very_long_order_id, "sku": "LONG", "qty": 20}
     url = Config.url
     r = requests.post(f"{url}/allocate", json=data)

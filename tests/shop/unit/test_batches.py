@@ -1,4 +1,5 @@
 from datetime import date
+
 from shop.domain.model import Batch, OrderLine
 
 

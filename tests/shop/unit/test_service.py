@@ -1,7 +1,9 @@
+import datetime as dt
+
 import pytest
+
 import shop.domain.model as model
 import shop.service_layer.services as services
-import datetime as dt
 
 
 class FakeRepository:
@@ -38,11 +40,13 @@ def test_returns_allocation():
     result = services.allocate("o1", "COMPLICATED-LAMP", 10, repo, FakeSession())
     assert result == "batch1"
 
+
 def test_add_batch():
     repo, session = FakeRepository([]), FakeSession()
     services.add_batch("b1", "CRUNCHY-ARMCHAIR", 100, None, repo, session)
     assert repo.get("b1") is not None
     assert session.committed
+
 
 def test_allocate_returns_allocation():
     repo, session = FakeRepository([]), FakeSession()
@@ -58,6 +62,7 @@ def test_allocate_errors_for_invalid_sku():
     with pytest.raises(services.InvalidSku, match="Invalid sku NONEXISTENTSKU"):
         services.allocate("o1", "NONEXISTENTSKU", 10, repo, FakeSession())
 
+
 def test_error_for_invalid_sku():
     repo = FakeRepository.for_batch("b1", "AREALSKU", 100, eta=None)
 
@@ -71,6 +76,7 @@ def test_commits():
 
     services.allocate("o1", "OMINOUS-MIRROR", 10, repo, session)
     assert session.committed is True
+
 
 def test_deallocate_decrements_available_quantity():
     repo, session = FakeRepository([]), FakeSession()

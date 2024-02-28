@@ -1,5 +1,6 @@
-from files.compare import sync
 import pytest
+
+from files.compare import sync
 
 
 def make_file(path, file_name, content):
