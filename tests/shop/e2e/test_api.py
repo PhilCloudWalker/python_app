@@ -1,14 +1,10 @@
 import random
 import string
 
-import pytest
 import random_word
 import requests
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
 
 from config import AppConfig
-from shop.adapter.orm import DB_URL
 
 Config = AppConfig.from_environ()
 

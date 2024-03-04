@@ -1,7 +1,6 @@
 # Continue working:
 
-chapter 4 - tasks
-- use service in api defintion
+
 
 ## Test Setup
 - using testing client for the app

@@ -50,3 +50,17 @@ def add_stock(sqlite_session):
         sqlite_session.commit()
 
     return _add_stock
+
+
+@pytest.fixture
+def in_memory_db_session():
+    engine = create_engine("sqlite:///:memory:", echo=True)
+    metadata.create_all(engine)
+    return engine
+
+
+@pytest.fixture
+def memory_sessionfactory(in_memory_db_session):
+    start_mappers()
+    yield sessionmaker(bind=in_memory_db_session)
+    clear_mappers()
