@@ -1,4 +1,4 @@
-from shop.domain.model import Batch
+from shop.domain.model import Batch, Product
 from typing import Optional
 
 
@@ -25,3 +25,18 @@ class SqlAlchemyRepository:
 
     def list(self):
         return self.session.query(Batch).all()
+
+
+class ProductSQLRepository(AbstractRepository):
+
+    def __init__(self, session) -> None:
+        self.session = session
+    
+    def add(self, product: Product):
+        self.session.add(product)
+    
+    def get(self, sku):
+        return self.session.query(Product).filter_by(sku=sku).first()
+    
+    def list(self):
+        return self.session.query(Product).all()

@@ -27,11 +27,11 @@ def insert_allocation(session, orderline_id, batch_id):
         f'Update order_lines SET batch_id = "{batch_id}" where order_lines.id = "{orderline_id}"'
     )
 
-
+#TODO check only same skus can be added
 def test_repository_can_save_a_batch(session):
     batch = model.Batch("batch1", "RUSTY-SOAPDISH", 100, eta=None)
 
-    repo = repository.SqlAlchemyRepository(session)
+    repo = repository.SqlAlchemyRepository(session) # TODO add sku
     repo.add(batch)
     session.commit()
 
@@ -59,6 +59,7 @@ def test_repository_can_retrieve_a_batch_with_allocations(session):
     }
 
 
+# TODO only batches of specific skus will be retrieved using list
 def test_repository_can_list_multiple_batches(session):
     insert_batch(session, "batch1")
     insert_batch(session, "batch2")

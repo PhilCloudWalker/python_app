@@ -1,6 +1,8 @@
 # Continue working:
 
-
+## Question
+- adjust uow
+- think about adjusting repo and orm
 
 ## Test Setup
 - using testing client for the app
