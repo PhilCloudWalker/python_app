@@ -40,6 +40,36 @@ def test_batch_mapper_can_load_batches(session):
     assert session.query(model.Batch).all() == expected
 
 
+def test_product_mapper_can_load_products(session):
+    session.execute(
+        "INSERT INTO batches (reference, sku, eta, _purchased_quantity) VALUES "
+        '("ref1", "BLUE-BERRY",NULL, 100)'
+    )
+    session.execute(
+        "INSERT INTO products (sku, version_number) VALUES "
+        '("BLUE-BERRY", 0)'
+    )
+
+    product = session.query(model.Product).one()
+    assert product.sku == "BLUE-BERRY"
+    assert product._batches == [model.Batch("ref1", "BLUE-BERRY", 100, eta=None)]
+
+def test_saving_products(session):
+    batch = model.Batch("batch1", "sku1", 100, eta=None)
+    product = model.Product("sku1", [batch])
+    session.add(product)
+    session.commit()
+
+    product_row = session.execute(
+        'SELECT * FROM "products"'
+    )
+    batch_row = session.execute(
+        'SELECT sku FROM "batches"'
+    )
+    assert list(product_row) == [("sku1", 0)]
+    assert list(batch_row) == [("sku1",)]
+
+
 def test_saving_batches(session):
     batch = model.Batch("batch1", "sku1", 100, eta=None)
     session.add(batch)

@@ -11,7 +11,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import Session, registry, relationship
 from sqlalchemy_utils import create_database, database_exists
 
-from shop.domain.model import Batch, OrderLine
+from shop.domain.model import Batch, OrderLine, Product
 
 metadata = MetaData()
 mapper_registry = registry(metadata=metadata)
@@ -31,9 +31,16 @@ batch = Table(
     "batches",
     metadata,
     Column("reference", String, primary_key=True),
-    Column("sku", String),
+    Column("sku", String, ForeignKey("products.sku")),
     Column("eta", Date),
     Column("_purchased_quantity", Integer),
+)
+
+product = Table(
+    "products",
+    metadata,
+    Column("sku", String, primary_key=True),
+    Column("version_number", Integer)
 )
 
 
@@ -47,6 +54,15 @@ def start_mappers():
                 OrderLine, backref="order_lines", collection_class=set
             )
         },
+    )
+    mapper_registry.map_imperatively(
+        Product, 
+        product, 
+        properties={
+            "_batches": relationship(
+                Batch, backref="batches", collection_class=list
+            )
+        }
     )
 
 

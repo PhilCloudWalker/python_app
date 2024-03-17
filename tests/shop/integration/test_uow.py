@@ -6,11 +6,16 @@ import time
 import traceback
 
 
-def insert_batch(session, ref, sku, qty, eta):
+def insert_batch(session, ref, sku, qty, eta, version_number=0):
     session.execute(
         "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
         " VALUES (:ref, :sku, :qty, :eta)",
         dict(ref=ref, sku=sku, qty=qty, eta=eta),
+    )
+    session.execute(
+        "INSERT INTO products (sku, version_number)"
+        " VALUES (:sku, :version_number)",
+        dict(sku=sku, version_number=version_number),
     )
 
 
@@ -26,12 +31,12 @@ def get_allocated_batch_ref(session, orderid, sku):
     return batchref
 
 
-def test_uow_can_retrieve_a_batch_and_allocate_to_it(session_factory):
-    session = session_factory()
+def test_uow_can_retrieve_a_batch_and_allocate_to_it(memory_sessionfactory):
+    session = memory_sessionfactory()
     insert_batch(session, "batch1", "HIPSTER-WORKBENCH", 100, None)
     session.commit()
 
-    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
+    uow = unit_of_work.SqlAlchemyUnitOfWork(memory_sessionfactory)
     with uow:
         product = uow.products.get(sku="HIPSTER-WORKBENCH")
         line = model.OrderLine("o1", "HIPSTER-WORKBENCH", 10)
@@ -42,27 +47,27 @@ def test_uow_can_retrieve_a_batch_and_allocate_to_it(session_factory):
     assert batchref == "batch1"
 
 
-def test_rolls_back_uncommitted_work_by_default(session_factory):
-    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
+def test_rolls_back_uncommitted_work_by_default(memory_sessionfactory):
+    uow = unit_of_work.SqlAlchemyUnitOfWork(memory_sessionfactory)
     with uow:
         insert_batch(uow.session, "batch1", "MEDIUM-PLINTH", 100, None)
 
-    new_session = session_factory()
+    new_session = memory_sessionfactory()
     rows = list(new_session.execute('SELECT * FROM "batches"'))
     assert rows == []
 
 
-def test_rolls_back_on_error(session_factory):
+def test_rolls_back_on_error(memory_sessionfactory):
     class MyException(Exception):
         pass
 
-    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
+    uow = unit_of_work.SqlAlchemyUnitOfWork(memory_sessionfactory)
     with pytest.raises(MyException):
         with uow:
             insert_batch(uow.session, "batch1", "LARGE-FORK", 100, None)
             raise MyException()
 
-    new_session = session_factory()
+    new_session = memory_sessionfactory()
     rows = list(new_session.execute('SELECT * FROM "batches"'))
     assert rows == []
 

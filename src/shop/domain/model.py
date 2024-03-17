@@ -72,7 +72,7 @@ class Product:
 
     def __init__(self, sku:str, batches:list) -> None:
         self.sku = sku
-        self.batches = batches
+        self._batches = batches
         self.version_number = 0
 
         if wrong_batches := [b for b in batches if b.sku != self.sku ]:
@@ -94,17 +94,17 @@ class Product:
         if batch.sku != self.sku:
             raise WrongSku(f"Attempt to allocate sku {batch.sku} to product {self.sku}")
 
-        self.batches.append(batch)
+        self._batches.append(batch)
 
     def get_batch(self, reference):
         try:
-            return next(b for b in self.batches if b.reference == reference)
+            return next(b for b in self._batches if b.reference == reference)
         except StopIteration:
             return None
 
     def allocate(self, line: OrderLine):
         try:
-            batch = next(b for b in sorted(self.batches) if b.can_allocate(line))
+            batch = next(b for b in sorted(self._batches) if b.can_allocate(line))
             batch.allocate(line)
             self.version_number += 1
             return batch.reference
@@ -113,7 +113,7 @@ class Product:
     
     def deallocate(self, line: OrderLine):
         try:
-            batch = next(b for b in self.batches if line in b._allocations)
+            batch = next(b for b in self._batches if line in b._allocations)
             batch.deallocate(line)
         except StopIteration:
             raise NoAllocation(f"Orderline {line.orderid} is not allocated")
