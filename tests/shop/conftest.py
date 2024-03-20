@@ -41,20 +41,17 @@ def sqlite_session(sqlite_db):
 @pytest.fixture
 def add_stock(sqlite_session):
     def _add_stock(batches):
-        first = True
         for batch_ref, sku, qty, eta in batches:
-            eta = f'"{eta}"' if eta else "NULL"
+            sqlite_session.execute(
+                    "INSERT INTO products (sku, version_number) VALUES "
+                    f"('{sku}', 0) "
+                    "On CONFLICT DO NOTHING"
+                )
+            eta = f"'{eta}'" if eta else "NULL"
             sqlite_session.execute(
                 "INSERT INTO batches (reference, sku,_purchased_quantity, eta) VALUES "
-                f'("{batch_ref}", "{sku}", {qty}, {eta})'
+                f"('{batch_ref}', '{sku}', {qty}, {eta})"
             )
-            if first:
-                sqlite_session.execute(
-                    "INSERT INTO products (sku, version_number) VALUES "
-                    f'("{sku}", 0)'
-                )
-                first = False
-
         sqlite_session.commit()
 
     return _add_stock

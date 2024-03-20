@@ -13,6 +13,11 @@ dependencies = [
     "environ-config>=23.2.0",
     "isort>=5.13.2",
     "flake8>=7.0.0",
+    "psycopg2-binary>=2.9.9",
+    "pg8000>=1.30.5",
+    "psycopg2>=2.9.9",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -25,5 +30,5 @@ dev = [
 ]
 [tool.pdm.scripts]
 test = "pytest tests/shop/"
-app = "flask --app shop.entrypoints.flask_app --debug run"
+app = "uvicorn shop.entrypoints.app:app --reload --port 5000"
 start.env_file = ".env"

@@ -8,16 +8,11 @@
             "name": "Python Debugger: Flask",
             "type": "debugpy",
             "request": "launch",
-            "module": "flask",
-            "env": {
-                "FLASK_DEBUG": "1"
-            },
+            "module": "uvicorn",
             "args": [
-                "--app",
-                "shop.entrypoints.flask_app",
-                "run",
-                "--no-debugger",
-                "--no-reload"
+                "shop.entrypoints.app:app",
+                "--port",
+                "5000"
             ],
             "jinja": true,
             "justMyCode": true

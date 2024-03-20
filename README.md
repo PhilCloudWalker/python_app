@@ -1,8 +1,16 @@
 # Continue working:
+- Expose app container
+- create a small k8s cluster
+- postgres on K8s https://www.digitalocean.com/community/tutorials/how-to-deploy-postgres-to-kubernetes-cluster
 
-## Question
-- adjust uow
-- think about adjusting repo and orm
+Gu
+# Instructions
+Start Postgres 
+``````
+docker run --name pgsql --rm -e POSTGRES_PASSWORD=test1234 -p 5432:5432 -v ${PWD}/postgres-docker:/var/lib/postgresql/data postgres
+https://earthly.dev/blog/postgres-docker/
+``````
+
 
 ## Test Setup
 - using testing client for the app

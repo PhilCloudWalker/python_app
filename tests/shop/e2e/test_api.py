@@ -53,7 +53,7 @@ def test_400_message_for_out_of_stock(add_stock):
     url = Config.url
     r = requests.post(f"{url}/allocate", json=data)
     assert r.status_code == 400
-    assert r.json()["message"] == f"Out of stock for sku {sku}"
+    assert r.json()["detail"] == f"Out of stock for sku {sku}"
 
 
 def test_400_message_for_invalid_sku():
@@ -62,7 +62,7 @@ def test_400_message_for_invalid_sku():
     url = Config.url
     r = requests.post(f"{url}/allocate", json=data)
     assert r.status_code == 400
-    assert r.json()["message"] == f"Invalid sku {unknown_sku}"
+    assert r.json()["detail"] == f"Invalid sku {unknown_sku}"
 
 
 def test_400_content_too_long():
@@ -71,4 +71,4 @@ def test_400_content_too_long():
     url = Config.url
     r = requests.post(f"{url}/allocate", json=data)
     assert r.status_code == 400
-    assert r.json()["message"] == f"Request object has to be below 1MB"
+    assert r.json()["detail"] == f"Request object has to be below 1MB"

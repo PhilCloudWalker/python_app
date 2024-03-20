@@ -10,12 +10,23 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Session, registry, relationship
 from sqlalchemy_utils import create_database, database_exists
+from sqlalchemy.engine import URL
 
 from shop.domain.model import Batch, OrderLine, Product
 
 metadata = MetaData()
 mapper_registry = registry(metadata=metadata)
 DB_URL = "sqlite:///data.db"
+'''
+DB_URL = URL.create(
+    "postgresql",
+    username="postgres",
+    password="test1234",  # plain (unescaped) text
+    host="localhost",
+    database="shop",
+)
+'''
+
 
 order_line = Table(
     "order_lines",
