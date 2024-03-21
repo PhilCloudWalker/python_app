@@ -1,6 +1,9 @@
 # Continue working:
-- Expose app container
 - create a small k8s cluster
+- deploy app with sqlite and open it using port-forwarding
+- deploy postgres and connect with Azure Data Studio using port-fowarding
+- connect app to postgres db and check app using port-forwarding
+- replace port-forwarding using rproxy
 - postgres on K8s https://www.digitalocean.com/community/tutorials/how-to-deploy-postgres-to-kubernetes-cluster
 
 Gu

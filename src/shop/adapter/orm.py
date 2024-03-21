@@ -14,18 +14,20 @@ from sqlalchemy.engine import URL
 
 from shop.domain.model import Batch, OrderLine, Product
 
+from config import AppConfig
+
+Config = AppConfig.from_environ()
+
 metadata = MetaData()
 mapper_registry = registry(metadata=metadata)
-DB_URL = "sqlite:///data.db"
-'''
 DB_URL = URL.create(
-    "postgresql",
-    username="postgres",
-    password="test1234",  # plain (unescaped) text
-    host="localhost",
-    database="shop",
+    Config.db_driver,
+    username=Config.db_user,
+    password=Config.db_password,
+    host=Config.db_host,
+    database=Config.db_database,
 )
-'''
+
 
 
 order_line = Table(
