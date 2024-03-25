@@ -1,12 +1,26 @@
 # Continue working:
-- create a small k8s cluster
-- deploy app with sqlite and open it using port-forwarding
-- deploy postgres and connect with Azure Data Studio using port-fowarding
+- deploy postgres
+  - add volume to persist data
+  - add secrets
 - connect app to postgres db and check app using port-forwarding
 - replace port-forwarding using rproxy
 - postgres on K8s https://www.digitalocean.com/community/tutorials/how-to-deploy-postgres-to-kubernetes-cluster
+- use acr task to build the docker image automatically https://learn.microsoft.com/en-gb/azure/container-registry/container-registry-tutorial-build-task
 
 Gu
+
+# Docker 
+```
+docker build . -t app:sqlite
+
+docker tag app:sqlite p1containerregistry.azurecr.io/app:sqlite
+
+az acr login --name p1containerregistry
+
+docker push p1containerregistry.azurecr.io/app:sqlite
+```
+
+
 # Instructions
 Start Postgres 
 ``````
