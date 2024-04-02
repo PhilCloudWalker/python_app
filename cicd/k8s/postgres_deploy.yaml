@@ -17,6 +17,8 @@ spec:
       labels:
         app: postgres
     spec:
+      nodeSelector:
+        stage: apps 
       containers:
       - image: postgres
         name: postgres
@@ -25,5 +27,15 @@ spec:
         resources: {}
         env: 
         - name: POSTGRES_PASSWORD
-          value: test1234
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres_password
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-volume-claim
 status: {}

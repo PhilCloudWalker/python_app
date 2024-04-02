@@ -17,6 +17,8 @@ spec:
       labels:
         app: app
     spec:
+      nodeSelector:
+        stage: apps
       containers:
       - image: p1containerregistry.azurecr.io/app:sqlite
         name: app
@@ -24,4 +26,18 @@ spec:
         - containerPort: 1234
         resources: {}
         imagePullPolicy: Always
+        env:
+          - name: APP_DB_DRIVER
+            value: "postgresql"
+          - name: APP_DB_HOST
+            value: "postgres.default"
+          - name: APP_DB_USER
+            value: "postgres"
+          - name: APP_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: postgres_password 
+          - name: APP_DB_DATABASE
+            value: "shop"
 status: {}

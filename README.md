@@ -1,13 +1,16 @@
 # Continue working:
-- deploy postgres
-  - add volume to persist data
-  - add secrets
-- connect app to postgres db and check app using port-forwarding
-- replace port-forwarding using rproxy
-- postgres on K8s https://www.digitalocean.com/community/tutorials/how-to-deploy-postgres-to-kubernetes-cluster
-- use acr task to build the docker image automatically https://learn.microsoft.com/en-gb/azure/container-registry/container-registry-tutorial-build-task
+- check if label is still available on node after restart - f not use https://learn.microsoft.com/en-us/azure/aks/use-labels 
+- replace port-forwarding using loadbalancer
+  - https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
+  - https://learn.microsoft.com/en-us/azure/aks/load-balancer-standard
+- access app via rproxy
+  - https://earthly.dev/blog/setup-reverse-proxy-kubernetes-nginx/
+- deploy traefik
+  - https://platform9.com/learn/v1.0/tutorials/traefik-ingress
+- currently - storage class local - replace bei azure files
+  - build it manually  https://learn.microsoft.com/en-us/azure/aks/azure-csi-files-storage-provision#statically-provision-a-volume
+  - build it via dynamically via storage class https://learn.microsoft.com/en-us/azure/aks/azure-csi-files-storage-provision#dynamically-provision-a-volume (current assumptions: rights not correctly configured)
 
-Gu
 
 # Docker 
 ```
@@ -72,3 +75,13 @@ https://earthly.dev/blog/postgres-docker/
 # Tips
 - Define focus time
 - Stop in the middle
+
+
+az storage account create -n p1aksstraccount -g MC_p1-python-app-test_p1-python-aks_westeurope -l westeurope --sku Standard_LRS
+
+
+export AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string -n p1aksstraccount -g p1-python-app-test -o tsv)
+
+az storage share create -n p1akstrshare --connection-string $AZURE_STORAGE_CONNECTION_STRING
+
+STORAGE_KEY=$(az storage account keys list --resource-group MC_p1-python-app-test_p1-python-aks_westeurope --account-name p1aksstraccount --query "[0].value" -o tsv)
