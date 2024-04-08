@@ -9,7 +9,7 @@ from shop.adapter.orm import start_mappers, validate_database, DB_URL
 import shop.service_layer.unit_of_work as unit_of_work
 
 
-app = FastAPI()
+app = FastAPI(root_path="/app")
 validate_database()
 start_mappers()  # TODO: potential test issue - if test import flask_app start mappers would be called a 2nd time after conftest which results in an error
 MAX_CONTENT_LENGTH = 1024**2
@@ -47,3 +47,7 @@ def list_products():
 @app.get("/health")
 def health():
     return {"message": "Hello World"}
+
+@app.get("/")
+def health():
+    return {"message": "Hello, this is the homepage"}

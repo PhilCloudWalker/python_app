@@ -20,7 +20,7 @@ spec:
       nodeSelector:
         stage: apps
       containers:
-      - image: p1containerregistry.azurecr.io/app:sqlite
+      - image: p1containerregistry.azurecr.io/app:v3
         name: app
         ports:
         - containerPort: 1234

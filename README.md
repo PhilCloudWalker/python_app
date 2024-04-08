@@ -1,12 +1,10 @@
 # Continue working:
-- check if label is still available on node after restart - f not use https://learn.microsoft.com/en-us/azure/aks/use-labels 
-- replace port-forwarding using loadbalancer
-  - https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
-  - https://learn.microsoft.com/en-us/azure/aks/load-balancer-standard
 - access app via rproxy
   - https://earthly.dev/blog/setup-reverse-proxy-kubernetes-nginx/
+  - https://medium.com/@saifeddine.segni94/nginx-ingress-controllers-and-azure-app-gateway-for-azure-kubernetes-service-aks-f18c5be955d0
 - deploy traefik
   - https://platform9.com/learn/v1.0/tutorials/traefik-ingress
+- put app and postgres in different namespaces and apply rules
 - currently - storage class local - replace bei azure files
   - build it manually  https://learn.microsoft.com/en-us/azure/aks/azure-csi-files-storage-provision#statically-provision-a-volume
   - build it via dynamically via storage class https://learn.microsoft.com/en-us/azure/aks/azure-csi-files-storage-provision#dynamically-provision-a-volume (current assumptions: rights not correctly configured)

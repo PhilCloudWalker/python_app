@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: reverse-proxy
+  name: reverse-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reverse-proxy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: reverse-proxy
+    spec:
+      containers:
+      - image: p1containerregistry.azurecr.io/reverse-proxy:v3
+        name: reverse-proxy
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
